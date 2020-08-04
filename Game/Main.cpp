@@ -58,8 +58,10 @@ int main(int, char**)
 
 		for (int i = 0; i < width * height; i++)
 		{
-			Uint8 c = rand() % 256;
-			pixels[i] = (c << 24 | c << 16 | c << 8); // (r,g,b,a)
+			Uint8 c1 = rand() % 256;
+			Uint8 c2 = rand() % 256;
+			Uint8 c3 = rand() % 256;
+			pixels[i] = (c1 << 24 | c2 << 16 | c3 << 8); // (r,g,b,a)
 		}
 		SDL_UpdateTexture(texture, NULL, pixels, width * sizeof(Uint32));
 
@@ -68,7 +70,7 @@ int main(int, char**)
 		rect.y = 140;
 		rect.w = width;
 		rect.h = height;
-		SDL_RenderCopy(renderer, texture, NULL, &rect);
+		SDL_RenderCopy(renderer, texture, NULL, NULL);
 
 		SDL_Rect rect2;
 		rect2.x = 20;
