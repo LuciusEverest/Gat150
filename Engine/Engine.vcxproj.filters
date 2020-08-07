@@ -9,15 +9,20 @@
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
     </Filter>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
     <Filter Include="Math">
       <UniqueIdentifier>{1dd71c1c-f269-4e61-9fdb-c80f4d2862f4}</UniqueIdentifier>
     </Filter>
     <Filter Include="Graphics">
       <UniqueIdentifier>{6021f6e7-741f-4aa7-b868-b4f9a2ce0150}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core">
+      <UniqueIdentifier>{0c50830d-e7d9-4ad2-9560-4ecaf92dcfa5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resources">
+      <UniqueIdentifier>{4828c5ff-d244-4a58-8d39-dc8f38a5b0ff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Input">
+      <UniqueIdentifier>{8e0cdd1f-b02a-4cf7-b3bc-97c1792a73f2}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -51,6 +56,21 @@
     <ClInclude Include="Graphics\Texture.h">
       <Filter>Graphics</Filter>
     </ClInclude>
+    <ClInclude Include="Core\System.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Resources\Resource.h">
+      <Filter>Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="Resources\ResourceManager.h">
+      <Filter>Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\Renderer.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Input\InputSystem.h">
+      <Filter>Input</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -67,6 +87,15 @@
     </ClCompile>
     <ClCompile Include="Graphics\Texture.cpp">
       <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Resources\ResourceManager.cpp">
+      <Filter>Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\Renderer.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Input\InputSystem.cpp">
+      <Filter>Input</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

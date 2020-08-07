@@ -1,40 +1,28 @@
 #include "Graphics/Texture.h"
+#include "Graphics/Renderer.h"
 
 #include <iostream>
+#include <SDL_image.h>
 #include <SDL.h>
+#include <Resources/ResourceManager.h>
+#include <Input\InputSystem.h>
+#include <Math\Transform.h>
+
+bleh::ResourceManger resourceManager;
+bleh::Renderer renderer;
+bleh::InputSystem inputSystem;
 
 int main(int, char**)
 {
-	if (SDL_Init(SDL_INIT_VIDEO) != 0)
-	{
-		std::cout << "SDL_Init Error: " << SDL_GetError() << std::endl;
-		return 1;
-	}
+	renderer.Startup();
+	renderer.Create("GAT150", 800, 600);
+	inputSystem.Startup();
 
-	SDL_Window* window = SDL_CreateWindow("GAT150", 100, 100, 800, 600, SDL_WINDOW_SHOWN);// | SDL_WINDOW_BORDERLESS);
-	if (window == nullptr) {
-		std::cout << "Error: " << SDL_GetError() << std::endl;
-		SDL_Quit();
-		return 1;
-	}
-
-	SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
-	if (renderer == nullptr) {
-		std::cout << "Error: " << SDL_GetError() << std::endl;
-		SDL_Quit();
-		return 1;
-	}
-
-	int width = 128;
-	int height = 128;
-	SDL_Texture* texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_STATIC, width, height);
-	Uint32 *pixels = new Uint32[width * height]; // Uint32 (r,g,b,a) (8,8,8,8)
-	memset(pixels, 255, width * height * sizeof(Uint32));
-	SDL_UpdateTexture(texture, NULL, pixels, width * sizeof(Uint32));
-
-	bleh::Texture texture2;
-	texture2.Create("sf2.bmp", renderer);
+	bleh::Texture* texture1 = resourceManager.Get<bleh::Texture>("sf2.png", &renderer);
+	bleh::Texture* texture2 = resourceManager.Get<bleh::Texture>("sf2.png", &renderer);
 	float angle{ 0 };
+	bleh::Vector2 position{ 400, 300 };
+	bleh::Vector2 position1{ 100, 300 };
 
 	SDL_Event event;
 	bool quit = false;
@@ -48,33 +36,55 @@ int main(int, char**)
 			break;
 		}
 
-		SDL_SetRenderDrawColor(renderer, 128, 128, 255, 255);
-		SDL_RenderClear(renderer);
+		renderer.BeginFrame();
+		inputSystem.Update();
+
+		if (inputSystem.GetButtonState(SDL_SCANCODE_RIGHT) == bleh::InputSystem::eButtonState::HELD)
+			{
+				position.x = position.x - 5.0f;
+			}
+		if (inputSystem.GetButtonState(SDL_SCANCODE_LEFT) == bleh::InputSystem::eButtonState::HELD)
+			{
+				position.x = position.x + 5.0f;
+			}
+		
+		if (inputSystem.GetButtonState(SDL_SCANCODE_D) == bleh::InputSystem::eButtonState::HELD)
+			{
+				position1.x = position1.x - 5.0f;
+			}
+		if (inputSystem.GetButtonState(SDL_SCANCODE_A) == bleh::InputSystem::eButtonState::HELD)
+			{
+				position1.x = position1.x + 5.0f;
+			}
+		
+		if (inputSystem.GetButtonState(SDL_SCANCODE_DOWN) == bleh::InputSystem::eButtonState::HELD)
+			{
+				position.y = position.y - 5.0f;
+			}
+		if (inputSystem.GetButtonState(SDL_SCANCODE_UP) == bleh::InputSystem::eButtonState::HELD)
+			{
+				position.y = position.y + 5.0f;
+			}
+		
+		if (inputSystem.GetButtonState(SDL_SCANCODE_S) == bleh::InputSystem::eButtonState::HELD)
+			{
+				position1.y = position1.y - 5.0f;
+			}
+		if (inputSystem.GetButtonState(SDL_SCANCODE_W) == bleh::InputSystem::eButtonState::HELD)
+			{
+				position1.y = position1.y + 5.0f;
+			}
 
 		//draw 
-
-		for (int i = 0; i < width * height; i++)
-		{
-			Uint8 c1 = rand() % 256;
-			Uint8 c2 = rand() % 256;
-			Uint8 c3 = rand() % 256;
-			pixels[i] = (c1 << 24 | c2 << 16 | c3 << 8); // (r,g,b,a)
-		}
-		SDL_UpdateTexture(texture, NULL, pixels, width * sizeof(Uint32));
-
-		SDL_Rect rect;
-		rect.x = 140;
-		rect.y = 140;
-		rect.w = width;
-		rect.h = height;
-		SDL_RenderCopy(renderer, texture, NULL, &rect);
-		
 		angle = angle + 1;
-		texture2.Draw({ 500, 100 }, { 2, 2 }, angle);
+		texture1->Draw(position, { 2, 2 }, angle);
+		texture2->Draw(position1, { 2, 2 }, angle + angle);
 
-		SDL_RenderPresent(renderer);
+		renderer.EndFrame();
 	}
 
+	inputSystem.Shutdown();
+	renderer.Shutdown();
 	SDL_Quit();
 
 	return 0;

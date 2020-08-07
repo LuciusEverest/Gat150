@@ -1,12 +1,13 @@
 #include "pch.h"
 #include "Texture.h"
 #include <Math\Transform.h>
+#include <Graphics/Renderer.h>
 
-bool bleh::Texture::Create(const std::string& name, SDL_Renderer* renderer)
-{
-	m_renderer = renderer;
+bool bleh::Texture::Create(const std::string& name, void* renderer)
+{   
+	m_renderer = static_cast<Renderer*>(renderer)->m_renderer;
 
-	SDL_Surface* surface = SDL_LoadBMP(name.c_str());
+	SDL_Surface* surface = IMG_Load(name.c_str());
 	if (surface == nullptr)
 	{
 		std::cout << "Error: " << SDL_GetError() << std::endl;
@@ -26,7 +27,7 @@ bool bleh::Texture::Create(const std::string& name, SDL_Renderer* renderer)
 
 void bleh::Texture::Destroy()
 {
-	//
+	SDL_DestroyTexture(m_texture);
 }
 
 void bleh::Texture::Draw(const Vector2& position, const Vector2& scale, float angle)
