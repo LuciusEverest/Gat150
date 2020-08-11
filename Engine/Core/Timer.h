@@ -30,6 +30,6 @@ namespace bleh
 		float DeltaTime() { return m_dt; }
 
 	protected:
-		float m_dt;
+		float m_dt{ 0 };
 	};
 }

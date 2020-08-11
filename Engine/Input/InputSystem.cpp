@@ -42,11 +42,11 @@ bleh::InputSystem::eButtonState bleh::InputSystem::GetButtonState(int id)
 
 	if (buttonDown)
 	{
-		state = (prevButtonDown) ? eButtonState::IDLE : eButtonState::RELEASED;
+		state = (prevButtonDown) ? eButtonState::HELD : eButtonState::PRESSED;
 	}
 	else
 	{
-		state = (prevButtonDown) ?eButtonState::PRESSED : eButtonState::HELD;
+		state = (prevButtonDown) ?eButtonState::RELEASED : eButtonState::IDLE;
 	}
 
 	return state;
