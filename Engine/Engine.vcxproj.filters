@@ -15,9 +15,6 @@
     <Filter Include="Graphics">
       <UniqueIdentifier>{6021f6e7-741f-4aa7-b868-b4f9a2ce0150}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Core">
-      <UniqueIdentifier>{0c50830d-e7d9-4ad2-9560-4ecaf92dcfa5}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Resources">
       <UniqueIdentifier>{4828c5ff-d244-4a58-8d39-dc8f38a5b0ff}</UniqueIdentifier>
     </Filter>
@@ -29,6 +26,9 @@
     </Filter>
     <Filter Include="Components">
       <UniqueIdentifier>{c30f232d-ce39-462a-9230-74b0515e4777}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core">
+      <UniqueIdentifier>{0c50830d-e7d9-4ad2-9560-4ecaf92dcfa5}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -95,6 +95,12 @@
     <ClInclude Include="Components\RenderComponent.h">
       <Filter>Components</Filter>
     </ClInclude>
+    <ClInclude Include="Engine.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Components\SpriteComponent.h">
+      <Filter>Components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -128,6 +134,12 @@
       <Filter>Objects</Filter>
     </ClCompile>
     <ClCompile Include="Components\PhysicsComponent.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Components\SpriteComponent.cpp">
       <Filter>Components</Filter>
     </ClCompile>
   </ItemGroup>

@@ -7,7 +7,7 @@ namespace bleh
 {
 	void GameObject::Create(void* data)
 	{
-
+		m_engine = static_cast<Engine*>(data);
 	}
 
 	void GameObject::Destroy()

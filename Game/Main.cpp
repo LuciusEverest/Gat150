@@ -1,39 +1,32 @@
 #include "Graphics/Texture.h"
-#include "Graphics/Renderer.h"
 #include "pch.h"
-#include "Core/Timer.h"
+#include <Objects\GameObject.h>
+#include "Components/PhysicsComponent.h"
+#include "Components/SpriteComponent.h"
 
-#include <SDL_image.h>
-#include <Resources/ResourceManager.h>
-#include <Input\InputSystem.h>
-#include <Math\Transform.h>
-#include <Math\Math.h>
-
-
-bleh::ResourceManger resourceManager;
-bleh::Renderer renderer;
-bleh::InputSystem inputSystem;
-bleh::FrameTimer timer;
+bleh::Engine engine;
+bleh::GameObject player;
 
 int main(int, char**)
 {
+	engine.Startup();
 
-	/*bleh::Timer timer;
-	for (size_t i = 0; i < 100; i++) { std::sqrt(rand() % 100); }
+	player.Create(&engine);
+	player.m_transform.position = { 400, 300 };
+	player.m_transform.angle = 45;
 
-	std::cout << timer.ElapsedTicks() << std::endl;
-	std::cout << timer.ElapsedTicks() << std::endl;*/
+	bleh::Component* component;
+	component = new bleh::PhysicsComponent;
+	player.AddComponent(component);
+	component->Create();
+	
+	component = new bleh::SpriteComponent;
+	player.AddComponent(component);
+	component->Create();
 
-	renderer.Startup();
-	renderer.Create("GAT150", 800, 600);
-	inputSystem.Startup();
+	bleh::Texture* background = engine.GetSystem<bleh::ResourceManger>()->Get<bleh::Texture>("background.png", engine.GetSystem<bleh::Renderer>());
+	
 
-	bleh::Texture* background = resourceManager.Get<bleh::Texture>("background.png", &renderer);
-	bleh::Texture* car = resourceManager.Get<bleh::Texture>("cars.png", &renderer);
-
-	float angle{ 0 };
-	bleh::Vector2 position{ 400, 300 };
-	//bleh::Vector2 position1{ 100, 300 };
 	bleh::Vector2 velocity{ 0, 0};
 
 	SDL_Event event;
@@ -49,12 +42,10 @@ int main(int, char**)
 		}
 
 		//update
-		timer.Tick();
-		resourceManager.Update();
-		inputSystem.Update();
+		engine.Update();
+		player.Update();
 
-		quit = (inputSystem.GetButtonState(SDL_SCANCODE_ESCAPE) == bleh::InputSystem::eButtonState::PRESSED);
-
+		quit = (engine.GetSystem<bleh::InputSystem>()->GetButtonState(SDL_SCANCODE_ESCAPE) == bleh::InputSystem::eButtonState::PRESSED);
 
 		//player controller
 		/*if (inputSystem.GetButtonState(SDL_SCANCODE_RIGHT) == bleh::InputSystem::eButtonState::HELD)
@@ -67,13 +58,13 @@ int main(int, char**)
 				position.x = position.x + 200.0f * timer.DeltaTime();
 			}*/
 		
-		if (inputSystem.GetButtonState(SDL_SCANCODE_A) == bleh::InputSystem::eButtonState::HELD)
+		if (engine.GetSystem<bleh::InputSystem>()->GetButtonState(SDL_SCANCODE_A) == bleh::InputSystem::eButtonState::HELD)
 			{
-				angle = angle - 200.0f * timer.DeltaTime();
+				player.m_transform.angle = player.m_transform.angle - 200.0f * engine.GetTimer().DeltaTime();
 			}
-		if (inputSystem.GetButtonState(SDL_SCANCODE_D) == bleh::InputSystem::eButtonState::HELD)
+		if (engine.GetSystem<bleh::InputSystem>()->GetButtonState(SDL_SCANCODE_D) == bleh::InputSystem::eButtonState::HELD)
 			{
-				angle = angle + 200.0f * timer.DeltaTime();
+			player.m_transform.angle = player.m_transform.angle + 200.0f * engine.GetTimer().DeltaTime();
 			}
 		
 		/*if (inputSystem.GetButtonState(SDL_SCANCODE_DOWN) == bleh::InputSystem::eButtonState::HELD)
@@ -95,31 +86,23 @@ int main(int, char**)
 			}*/
 
 		bleh::Vector2 force{ 0,0 };
-		if (inputSystem.GetButtonState(SDL_SCANCODE_W) == bleh::InputSystem::eButtonState::HELD)
+		if (engine.GetSystem<bleh::InputSystem>()->GetButtonState(SDL_SCANCODE_W) == bleh::InputSystem::eButtonState::HELD)
 		{
 			force = bleh::Vector2::forward * 1000.0f;
 		}
-		force = bleh::Vector2::Rotate(force, bleh::DegreesToRadians(angle));
-
-		//physics
-		velocity = velocity + force * timer.DeltaTime();
-		velocity = velocity * 0.95f;
-		position = position + velocity * timer.DeltaTime();
+		force = bleh::Vector2::Rotate(force, bleh::DegreesToRadians(player.m_transform.angle));
 
 		//draw 
-		renderer.BeginFrame();
+		engine.GetSystem<bleh::Renderer>()->BeginFrame();
 
 		background->Draw({ 0, 0 });
 
 		//player sprite draw
-		car->Draw({ 64, 110, 60, 112 }, position, { 1, 1 }, angle);
+		player.Draw();
 
-		renderer.EndFrame();
+		engine.GetSystem<bleh::Renderer>()->EndFrame();
 	}
-
-	inputSystem.Shutdown();
-	renderer.Shutdown();
-	SDL_Quit();
+	engine.Shutdown();
 
 	return 0;
 }
