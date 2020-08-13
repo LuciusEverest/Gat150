@@ -39,6 +39,7 @@ namespace bleh
 		Color& operator /= (float s) { r /= s; g /= s; b /= s;  return *this; }
 
 		friend std::istream& operator >> (std::istream& stream, Color& c);
+		friend std::ostream& operator << (std::ostream& stream, const Color& c);
 
 		SDL_Color Pack8888() const;
 		operator SDL_Color() const { return Pack8888(); }

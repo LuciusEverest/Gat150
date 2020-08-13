@@ -3,6 +3,8 @@
 #include <Objects\GameObject.h>
 #include "Components/PhysicsComponent.h"
 #include "Components/SpriteComponent.h"
+#include "Components/PlayerComponent.h"
+#include "Core/Json.h"
 
 bleh::Engine engine;
 bleh::GameObject player;
@@ -23,9 +25,44 @@ int main(int, char**)
 	component = new bleh::SpriteComponent;
 	player.AddComponent(component);
 	component->Create();
+	
+	component = new bleh::PlayerComponent;
+	player.AddComponent(component);
+	component->Create();
+
+	rapidjson::Document document;
+	bleh::json::Load("json.txt", document);
+
+	std::string str;
+	bleh::json::Get(document, "string", str);
+	std::cout << str << std::endl;
+
+	bool b;
+	bleh::json::Get(document, "boolean", b);
+	std::cout << b << std::endl;
+
+	int i1;
+	bleh::json::Get(document, "integer1", i1);
+	std::cout << i1 << std::endl;
+
+	int i2;
+	bleh::json::Get(document, "integer2", i2);
+	std::cout << i2 << std::endl;
+
+	float f;
+	bleh::json::Get(document, "float", f);
+	std::cout << f << std::endl;
+
+	bleh::Vector2 v2;
+	bleh::json::Get(document, "vector2", v2);
+	std::cout << v2 << std::endl;
+
+	bleh::Color color;
+	bleh::json::Get(document, "color", color);
+	std::cout << color << std::endl;
+
 
 	bleh::Texture* background = engine.GetSystem<bleh::ResourceManger>()->Get<bleh::Texture>("background.png", engine.GetSystem<bleh::Renderer>());
-	
 
 	bleh::Vector2 velocity{ 0, 0};
 
@@ -45,52 +82,10 @@ int main(int, char**)
 		engine.Update();
 		player.Update();
 
-		quit = (engine.GetSystem<bleh::InputSystem>()->GetButtonState(SDL_SCANCODE_ESCAPE) == bleh::InputSystem::eButtonState::PRESSED);
-
-		//player controller
-		/*if (inputSystem.GetButtonState(SDL_SCANCODE_RIGHT) == bleh::InputSystem::eButtonState::HELD)
-			{
-				position.x = position.x - 200.0f * timer.DeltaTime();
-			}
-
-		if (inputSystem.GetButtonState(SDL_SCANCODE_LEFT) == bleh::InputSystem::eButtonState::HELD)
-			{
-				position.x = position.x + 200.0f * timer.DeltaTime();
-			}*/
-		
-		if (engine.GetSystem<bleh::InputSystem>()->GetButtonState(SDL_SCANCODE_A) == bleh::InputSystem::eButtonState::HELD)
-			{
-				player.m_transform.angle = player.m_transform.angle - 200.0f * engine.GetTimer().DeltaTime();
-			}
-		if (engine.GetSystem<bleh::InputSystem>()->GetButtonState(SDL_SCANCODE_D) == bleh::InputSystem::eButtonState::HELD)
-			{
-			player.m_transform.angle = player.m_transform.angle + 200.0f * engine.GetTimer().DeltaTime();
-			}
-		
-		/*if (inputSystem.GetButtonState(SDL_SCANCODE_DOWN) == bleh::InputSystem::eButtonState::HELD)
-			{
-				position.y = position.y - 200.0f * timer.DeltaTime();
-			}
-		if (inputSystem.GetButtonState(SDL_SCANCODE_UP) == bleh::InputSystem::eButtonState::HELD)
-			{
-				position.y = position.y + 200.0f * timer.DeltaTime();
-			}
-		*/
-		/*if (inputSystem.GetButtonState(SDL_SCANCODE_S) == bleh::InputSystem::eButtonState::HELD)
-			{
-				position.x = position.x - 200.0f * timer.DeltaTime();
-			}
-		if (inputSystem.GetButtonState(SDL_SCANCODE_W) == bleh::InputSystem::eButtonState::HELD)
-			{
-				position.y = position.y + 200.0f * timer.DeltaTime();
-			}*/
-
-		bleh::Vector2 force{ 0,0 };
-		if (engine.GetSystem<bleh::InputSystem>()->GetButtonState(SDL_SCANCODE_W) == bleh::InputSystem::eButtonState::HELD)
+		if (engine.GetSystem<bleh::InputSystem>()->GetButtonState(SDL_SCANCODE_ESCAPE) == bleh::InputSystem::eButtonState::PRESSED)
 		{
-			force = bleh::Vector2::forward * 1000.0f;
+			quit = true;
 		}
-		force = bleh::Vector2::Rotate(force, bleh::DegreesToRadians(player.m_transform.angle));
 
 		//draw 
 		engine.GetSystem<bleh::Renderer>()->BeginFrame();

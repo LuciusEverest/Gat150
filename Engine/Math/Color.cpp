@@ -34,4 +34,12 @@ namespace bleh
 
         return stream;
     }
+
+	std::ostream& operator<<(std::ostream& stream, const Color& v)
+	{
+		stream << v.r << " " << v.b << " " << v.g << " " << v.a;
+
+		return stream;
+	}
+
 }

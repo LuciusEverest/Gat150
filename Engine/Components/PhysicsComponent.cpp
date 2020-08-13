@@ -7,7 +7,7 @@ namespace bleh
 
 	void PhysicsComponent::Create(void* data)
 	{
-		m_velocity = bleh::Vector2::forward * 100;
+		m_drag = 0.95f;
 	}
 
 	void PhysicsComponent::Destroy()
