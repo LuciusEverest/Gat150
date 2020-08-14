@@ -14,8 +14,10 @@ int main(int, char**)
 	engine.Startup();
 
 	player.Create(&engine);
-	player.m_transform.position = { 400, 300 };
-	player.m_transform.angle = 45;
+
+	rapidjson::Document document;
+	bleh::json::Load("player.txt", document);
+	player.Read(document);
 
 	bleh::Component* component;
 	component = new bleh::PhysicsComponent;
@@ -24,14 +26,13 @@ int main(int, char**)
 	
 	component = new bleh::SpriteComponent;
 	player.AddComponent(component);
+	bleh::json::Load("sprite.txt", document);
+	component->Read(document);
 	component->Create();
 	
 	component = new bleh::PlayerComponent;
 	player.AddComponent(component);
 	component->Create();
-
-	rapidjson::Document document;
-	bleh::json::Load("json.txt", document);
 
 	std::string str;
 	bleh::json::Get(document, "string", str);

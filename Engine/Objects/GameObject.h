@@ -24,6 +24,7 @@ namespace bleh
 		void RemoveComponent(Component* component);
 		void RemoveAllComponents();
 
+		void Read(const rapidjson::Value& value) override;
 
 	public:
 		Transform m_transform;
