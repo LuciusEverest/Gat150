@@ -28,7 +28,7 @@ namespace bleh
 
 	public:
 		Transform m_transform;
-		Engine* m_engine;
+		Engine* m_engine{ nullptr };
 
 	protected:
 		std::vector<Component*> m_components;

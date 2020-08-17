@@ -5,33 +5,42 @@
 #include "Components/SpriteComponent.h"
 #include "Components/PlayerComponent.h"
 #include "Core/Json.h"
+#include "Core/Factory.h"
 
 bleh::Engine engine;
-bleh::GameObject player;
+
+bleh::Factory<bleh::Object, std::string> objectFactory;
 
 int main(int, char**)
 {
 	engine.Startup();
 
-	player.Create(&engine);
+	objectFactory.Register("GameObject", bleh::Object::Instantiate<bleh::GameObject>);
+	objectFactory.Register("PhysicsComponent", bleh::Object::Instantiate<bleh::PhysicsComponent>);
+	objectFactory.Register("SpriteComponent", bleh::Object::Instantiate<bleh::SpriteComponent>);
+	objectFactory.Register("PlayerComponent", bleh::Object::Instantiate<bleh::PlayerComponent>);
+
+	bleh::GameObject* player = objectFactory.Create<bleh::GameObject>("GameObject");
+	
+	player->Create(&engine);
 
 	rapidjson::Document document;
 	bleh::json::Load("player.txt", document);
-	player.Read(document);
+	player->Read(document);
 
 	bleh::Component* component;
-	component = new bleh::PhysicsComponent;
-	player.AddComponent(component);
+	component = objectFactory.Create<bleh::Component>("PhysicsComponent");
+	player->AddComponent(component);
 	component->Create();
 	
-	component = new bleh::SpriteComponent;
-	player.AddComponent(component);
+	component = objectFactory.Create<bleh::Component>("SpriteComponent");
+	player->AddComponent(component);
 	bleh::json::Load("sprite.txt", document);
 	component->Read(document);
 	component->Create();
 	
-	component = new bleh::PlayerComponent;
-	player.AddComponent(component);
+	component = objectFactory.Create<bleh::Component>("PlayerComponent");
+	player->AddComponent(component);
 	component->Create();
 
 	std::string str;
@@ -81,7 +90,7 @@ int main(int, char**)
 
 		//update
 		engine.Update();
-		player.Update();
+		player->Update();
 
 		if (engine.GetSystem<bleh::InputSystem>()->GetButtonState(SDL_SCANCODE_ESCAPE) == bleh::InputSystem::eButtonState::PRESSED)
 		{
@@ -94,7 +103,7 @@ int main(int, char**)
 		background->Draw({ 0, 0 });
 
 		//player sprite draw
-		player.Draw();
+		player->Draw();
 
 		engine.GetSystem<bleh::Renderer>()->EndFrame();
 	}
