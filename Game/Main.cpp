@@ -1,26 +1,21 @@
 #include "Graphics/Texture.h"
 #include "pch.h"
 #include <Objects\GameObject.h>
-#include "Components/PhysicsComponent.h"
-#include "Components/SpriteComponent.h"
 #include "Components/PlayerComponent.h"
 #include "Core/Json.h"
 #include "Core/Factory.h"
+#include <Objects\ObjectFactory.h>
 
 bleh::Engine engine;
-
-bleh::Factory<bleh::Object, std::string> objectFactory;
 
 int main(int, char**)
 {
 	engine.Startup();
+		
+	bleh::ObjectFactory::Instance().Initialize();
+	bleh::ObjectFactory::Instance().Register("PlayerComponent", bleh::Object::Instantiate<bleh::PlayerComponent>);
 
-	objectFactory.Register("GameObject", bleh::Object::Instantiate<bleh::GameObject>);
-	objectFactory.Register("PhysicsComponent", bleh::Object::Instantiate<bleh::PhysicsComponent>);
-	objectFactory.Register("SpriteComponent", bleh::Object::Instantiate<bleh::SpriteComponent>);
-	objectFactory.Register("PlayerComponent", bleh::Object::Instantiate<bleh::PlayerComponent>);
-
-	bleh::GameObject* player = objectFactory.Create<bleh::GameObject>("GameObject");
+	bleh::GameObject* player = bleh::ObjectFactory::Instance().Create<bleh::GameObject>("GameObject");
 	
 	player->Create(&engine);
 
@@ -29,19 +24,19 @@ int main(int, char**)
 	player->Read(document);
 
 	bleh::Component* component;
-	component = objectFactory.Create<bleh::Component>("PhysicsComponent");
+	component = bleh::ObjectFactory::Instance().Create<bleh::Component>("PhysicsComponent");
+	component->Create(player);
 	player->AddComponent(component);
-	component->Create();
 	
-	component = objectFactory.Create<bleh::Component>("SpriteComponent");
-	player->AddComponent(component);
+	component = bleh::ObjectFactory::Instance().Create<bleh::Component>("SpriteComponent");
+	component->Create(player);
 	bleh::json::Load("sprite.txt", document);
 	component->Read(document);
-	component->Create();
-	
-	component = objectFactory.Create<bleh::Component>("PlayerComponent");
 	player->AddComponent(component);
-	component->Create();
+	
+	component = bleh::ObjectFactory::Instance().Create<bleh::Component>("PlayerComponent");
+	component->Create(player);
+	player->AddComponent(component);
 
 	std::string str;
 	bleh::json::Get(document, "string", str);

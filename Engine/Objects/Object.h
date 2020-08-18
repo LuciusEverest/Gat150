@@ -11,6 +11,8 @@ namespace bleh
 
 		virtual void Read(const rapidjson::Value& value) {}
 
+		virtual void Update() = 0;
+
 		template <typename T>
 		static T* Instantiate()
 		{

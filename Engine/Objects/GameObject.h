@@ -27,6 +27,7 @@ namespace bleh
 		void Read(const rapidjson::Value& value) override;
 
 	public:
+		std::string m_name;
 		Transform m_transform;
 		Engine* m_engine{ nullptr };
 

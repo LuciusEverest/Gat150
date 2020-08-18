@@ -17,6 +17,7 @@ namespace bleh
 
 	void GameObject::Read(const rapidjson::Value& value)
 	{
+		json::Get(value, "name", m_name);
 		json::Get(value, "position", m_transform.position);
 		json::Get(value, "scale", m_transform.scale);
 		json::Get(value, "angle", m_transform.angle);
@@ -41,7 +42,6 @@ namespace bleh
 
 	void GameObject::AddComponent(Component* component)
 	{
-		component->m_owner = this;
 		m_components.push_back(component);
 	}
 

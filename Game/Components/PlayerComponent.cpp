@@ -6,7 +6,7 @@ namespace bleh
 {
 	void PlayerComponent::Create(void* data)
 	{
-
+		m_owner = static_cast<GameObject*>(data);
 	}
 
 	void PlayerComponent::Destroy()
