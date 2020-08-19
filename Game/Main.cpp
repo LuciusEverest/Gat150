@@ -5,8 +5,10 @@
 #include "Core/Json.h"
 #include "Core/Factory.h"
 #include <Objects\ObjectFactory.h>
+#include <Objects\Scene.h>
 
 bleh::Engine engine;
+bleh::Scene scene;
 
 int main(int, char**)
 {
@@ -14,12 +16,14 @@ int main(int, char**)
 		
 	bleh::ObjectFactory::Instance().Initialize();
 	bleh::ObjectFactory::Instance().Register("PlayerComponent", bleh::Object::Instantiate<bleh::PlayerComponent>);
-
-	bleh::GameObject* player = bleh::ObjectFactory::Instance().Create<bleh::GameObject>("GameObject");
 	
-	player->Create(&engine);
+	scene.Create(&engine);
 
 	rapidjson::Document document;
+	bleh::json::Load("scene.txt", document);
+	scene.Read(document);
+
+	/*rapidjson::Document document;
 	bleh::json::Load("player.txt", document);
 	player->Read(document);
 
@@ -64,12 +68,11 @@ int main(int, char**)
 
 	bleh::Color color;
 	bleh::json::Get(document, "color", color);
-	std::cout << color << std::endl;
+	std::cout << color << std::endl;*/
 
+	//bleh::Texture* background = engine.GetSystem<bleh::ResourceManger>()->Get<bleh::Texture>("background.png", engine.GetSystem<bleh::Renderer>());
 
-	bleh::Texture* background = engine.GetSystem<bleh::ResourceManger>()->Get<bleh::Texture>("background.png", engine.GetSystem<bleh::Renderer>());
-
-	bleh::Vector2 velocity{ 0, 0};
+	//bleh::Vector2 velocity{ 0, 0};
 
 	SDL_Event event;
 	bool quit = false;
@@ -85,7 +88,7 @@ int main(int, char**)
 
 		//update
 		engine.Update();
-		player->Update();
+		scene.Update();
 
 		if (engine.GetSystem<bleh::InputSystem>()->GetButtonState(SDL_SCANCODE_ESCAPE) == bleh::InputSystem::eButtonState::PRESSED)
 		{
@@ -94,15 +97,12 @@ int main(int, char**)
 
 		//draw 
 		engine.GetSystem<bleh::Renderer>()->BeginFrame();
-
-		background->Draw({ 0, 0 });
-
-		//player sprite draw
-		player->Draw();
+		scene.Draw();
 
 		engine.GetSystem<bleh::Renderer>()->EndFrame();
 	}
 	engine.Shutdown();
+	scene.Destroy();
 
 	return 0;
 }

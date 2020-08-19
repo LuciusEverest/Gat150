@@ -2,6 +2,7 @@
 #include "GameObject.h"
 #include "Components/Component.h"
 #include "Components/RenderComponent.h"
+#include "ObjectFactory.h"
 
 namespace bleh
 {
@@ -21,6 +22,12 @@ namespace bleh
 		json::Get(value, "position", m_transform.position);
 		json::Get(value, "scale", m_transform.scale);
 		json::Get(value, "angle", m_transform.angle);
+
+		const rapidjson::Value& componentsValue = value["Components"];
+		if (componentsValue.IsArray())
+		{
+			ReadComponents(componentsValue);
+		}
 	}
 
 	void GameObject::Update()
@@ -63,4 +70,30 @@ namespace bleh
 			delete component;
 		}
 	}
+
+	void GameObject::ReadComponents(const rapidjson::Value& value)
+	{
+		for (rapidjson::SizeType i = 0; i < value.Size(); i++)
+		{
+			const rapidjson::Value& componentValue = value[i];
+			if (componentValue.IsObject())
+			{
+				std::string typeName;
+				// read component “type” name from json (Get)
+				json::Get(componentValue, "type", typeName);
+				// read component “type” name from json (Get)
+				bleh::Component* component = ObjectFactory::Instance().Create<Component>(typeName);
+					if (component)
+					{
+						// call component create, pass in gameobject (this)
+						component->Create(this);
+						// call component read
+						component->Read(componentValue);
+						// add component to game object
+						GameObject::AddComponent(component);
+					}
+			}
+		}
+	}
+
 }

@@ -26,6 +26,8 @@ namespace bleh
 
 		void Read(const rapidjson::Value& value) override;
 
+		void ReadComponents(const rapidjson::Value& value);
+
 	public:
 		std::string m_name;
 		Transform m_transform;
