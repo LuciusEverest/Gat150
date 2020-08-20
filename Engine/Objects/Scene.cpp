@@ -45,7 +45,6 @@ namespace bleh
 
 	void Scene::Update()
 	{
-		// iterate through the actors and call Update on each actor
 		for (auto gameObject : m_gameObjects)
 		{
 			gameObject->Update();
@@ -54,7 +53,6 @@ namespace bleh
 
 	void Scene::Draw()
 	{
-		// iterate through the actors and call Draw on each actor
 		for (auto gameObject : m_gameObjects)
 		{
 			gameObject->Draw();
@@ -65,7 +63,6 @@ namespace bleh
 	{
 		for (auto gameObject : m_gameObjects)
 		{
-			// compare game object name to name parameter (==)
 				if (gameObject->m_name == name)
 				{
 					return gameObject;
@@ -110,15 +107,11 @@ namespace bleh
 			{
 				std::string typeName;
 				json::Get(objectValue, "type", typeName);
-				// read component “type” name from json (Get)
 				bleh::GameObject* gameObject = ObjectFactory::Instance().Create<GameObject>(typeName);
 					if (gameObject)
 					{
-						// call game object create, pass in m_engine
 						gameObject->Create(m_engine);
-						// call game object read
 						gameObject->Read(objectValue);
-						// add game object to scene
 						Scene::AddGameObject(gameObject);
 					}
 			}
