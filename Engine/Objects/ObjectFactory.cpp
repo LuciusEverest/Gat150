@@ -8,10 +8,10 @@ namespace bleh
 {
 	void ObjectFactoryImpl::Initialize()
 	{
-		bleh::ObjectFactory::Instance().Register("GameObject", bleh::Object::Instantiate<bleh::GameObject>);
-		bleh::ObjectFactory::Instance().Register("PhysicsComponent", bleh::Object::Instantiate<bleh::PhysicsComponent>);
-		bleh::ObjectFactory::Instance().Register("SpriteComponent", bleh::Object::Instantiate<bleh::SpriteComponent>);
-		bleh::ObjectFactory::Instance().Register("SpriteAnimationComponent", bleh::Object::Instantiate<bleh::SpriteAnimationComponent>);
+		bleh::ObjectFactory::Instance().Register("GameObject", new Creator<GameObject, Object>);
+		bleh::ObjectFactory::Instance().Register("PhysicsComponent", new Creator<PhysicsComponent, Object>);
+		bleh::ObjectFactory::Instance().Register("SpriteComponent", new Creator<SpriteComponent, Object>);
+		bleh::ObjectFactory::Instance().Register("SpriteAnimationComponent", new Creator<SpriteAnimationComponent, Object>);
 
 	}
 }

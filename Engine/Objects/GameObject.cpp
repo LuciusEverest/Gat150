@@ -6,6 +6,24 @@
 
 namespace bleh
 {
+	GameObject::GameObject(const GameObject& other)
+	{
+		m_name = other.m_name;
+		m_tag = other.m_tag;
+		m_flags = other.m_flags;
+		m_lifetime = other.m_lifetime;
+
+		m_transform = other.m_transform;
+		m_engine = other.m_engine;
+
+		for (auto component : other.m_components)
+		{
+			Component* clone = static_cast<Component*>(component->Clone());
+			clone->m_owner = this;
+			AddComponent(clone);
+		}
+	}
+
 	void GameObject::Create(void* data)
 	{
 		m_engine = static_cast<Engine*>(data);
@@ -19,14 +37,25 @@ namespace bleh
 	void GameObject::Read(const rapidjson::Value& value)
 	{
 		json::Get(value, "name", m_name);
+		json::Get(value, "tag", m_tag);
+
+		bool transient = m_flags[eFlags::TRANSIENT];
+		json::Get(value, "transient", transient);
+		m_flags[eFlags::TRANSIENT] = transient;
+
+		json::Get(value, "lifetime", m_lifetime);
+
 		json::Get(value, "position", m_transform.position);
 		json::Get(value, "scale", m_transform.scale);
 		json::Get(value, "angle", m_transform.angle);
 
-		const rapidjson::Value& componentsValue = value["Components"];
-		if (componentsValue.IsArray())
+		if (value.HasMember("Components"))
 		{
-			ReadComponents(componentsValue);
+			const rapidjson::Value& componentsValue = value["Components"];
+			if (componentsValue.IsArray())
+			{
+				ReadComponents(componentsValue);
+			}
 		}
 	}
 
@@ -44,6 +73,15 @@ namespace bleh
 		if (component)
 		{
 			component->Draw();
+		}
+
+		if (m_flags[eFlags::TRANSIENT])
+		{
+			m_lifetime = m_lifetime - m_engine->GetTimer().DeltaTime();
+			if (m_lifetime <= 0)
+			{
+				m_flags[eFlags::DESTROY] = true;
+			}
 		}
 	}
 

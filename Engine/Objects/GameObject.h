@@ -2,6 +2,7 @@
 #include "Object.h"
 #include <Math\Transform.h>
 #include <Engine.h>
+#include <bitset>
 
 namespace bleh
 {
@@ -10,9 +11,18 @@ namespace bleh
 	class GameObject : public Object
 	{
 	public:
-		// Inherited via Object
+		enum eFlags
+		{
+			ACTIVE, VISIBLE, DESTROY, TRANSIENT
+		};
+
+	public:
+		GameObject() = default;
+		GameObject(const GameObject& other);
+
 		virtual void Create(void* data = nullptr) override;
 		virtual void Destroy() override;
+		virtual Object* Clone() const override { return new GameObject{ *this }; }
 
 		void Update();
 		void Draw();
@@ -30,6 +40,11 @@ namespace bleh
 
 	public:
 		std::string m_name;
+		std::string m_tag;
+		std::bitset<32> m_flags;
+
+		float m_lifetime{ 0 };
+
 		Transform m_transform;
 		Engine* m_engine{ nullptr };
 

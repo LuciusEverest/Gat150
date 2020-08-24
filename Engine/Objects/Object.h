@@ -8,6 +8,7 @@ namespace bleh
 	public:
 		virtual void Create(void* data = nullptr) = 0;
 		virtual void Destroy() = 0;
+		virtual Object* Clone() const { return nullptr; }
 
 		virtual void Read(const rapidjson::Value& value) {}
 

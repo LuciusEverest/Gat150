@@ -15,7 +15,7 @@ int main(int, char**)
 	engine.Startup();
 		
 	bleh::ObjectFactory::Instance().Initialize();
-	bleh::ObjectFactory::Instance().Register("PlayerComponent", bleh::Object::Instantiate<bleh::PlayerComponent>);
+	bleh::ObjectFactory::Instance().Register("PlayerComponent", new bleh::Creator<bleh::PlayerComponent, bleh::Object>);
 	
 	scene.Create(&engine);
 
@@ -23,56 +23,14 @@ int main(int, char**)
 	bleh::json::Load("scene.txt", document);
 	scene.Read(document);
 
-	/*rapidjson::Document document;
-	bleh::json::Load("player.txt", document);
-	player->Read(document);
+	/*for (size_t i = 0; i < 10; i++)
+	{
+		bleh::GameObject* gameObject = bleh::ObjectFactory::Instance().Create<bleh::GameObject>("ProtoExplosion");
+		gameObject->m_transform.position = { bleh::random(0, 800), bleh::random(0, 600) };
+		gameObject->m_transform.angle = bleh::random(0, 360);
 
-	bleh::Component* component;
-	component = bleh::ObjectFactory::Instance().Create<bleh::Component>("PhysicsComponent");
-	component->Create(player);
-	player->AddComponent(component);
-	
-	component = bleh::ObjectFactory::Instance().Create<bleh::Component>("SpriteComponent");
-	component->Create(player);
-	bleh::json::Load("sprite.txt", document);
-	component->Read(document);
-	player->AddComponent(component);
-	
-	component = bleh::ObjectFactory::Instance().Create<bleh::Component>("PlayerComponent");
-	component->Create(player);
-	player->AddComponent(component);
-
-	std::string str;
-	bleh::json::Get(document, "string", str);
-	std::cout << str << std::endl;
-
-	bool b;
-	bleh::json::Get(document, "boolean", b);
-	std::cout << b << std::endl;
-
-	int i1;
-	bleh::json::Get(document, "integer1", i1);
-	std::cout << i1 << std::endl;
-
-	int i2;
-	bleh::json::Get(document, "integer2", i2);
-	std::cout << i2 << std::endl;
-
-	float f;
-	bleh::json::Get(document, "float", f);
-	std::cout << f << std::endl;
-
-	bleh::Vector2 v2;
-	bleh::json::Get(document, "vector2", v2);
-	std::cout << v2 << std::endl;
-
-	bleh::Color color;
-	bleh::json::Get(document, "color", color);
-	std::cout << color << std::endl;*/
-
-	//bleh::Texture* background = engine.GetSystem<bleh::ResourceManger>()->Get<bleh::Texture>("background.png", engine.GetSystem<bleh::Renderer>());
-
-	//bleh::Vector2 velocity{ 0, 0};
+		scene.AddGameObject(gameObject);
+	}*/
 
 	SDL_Event event;
 	bool quit = false;
@@ -97,11 +55,13 @@ int main(int, char**)
 
 		//draw 
 		engine.GetSystem<bleh::Renderer>()->BeginFrame();
+
 		scene.Draw();
 
 		engine.GetSystem<bleh::Renderer>()->EndFrame();
 	}
 	engine.Shutdown();
+
 	scene.Destroy();
 
 	return 0;

@@ -7,7 +7,8 @@ namespace bleh
 	{
 	public:
 		virtual void Create(void* data = nullptr) override;
-		virtual void Destroy() override;
+		virtual void Destroy() override;		
+		virtual Object* Clone() const override { return new SpriteComponent{ *this }; }
 
 		void Read(const rapidjson::Value& value) override;
 

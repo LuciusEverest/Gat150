@@ -7,6 +7,7 @@ namespace bleh
 	{
 		virtual void Create(void* data = nullptr) override;
 		virtual void Destroy() override;
+		virtual Object* Clone() const override { return new SpriteAnimationComponent{ *this }; }
 
 		void Read(const rapidjson::Value& value) override;
 

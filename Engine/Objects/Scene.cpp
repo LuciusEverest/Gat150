@@ -34,11 +34,22 @@ namespace bleh
 		//			AddGameObject(gameObject);
 		//		}
 		//}
-
-		const rapidjson::Value& objectsValue = value["GameObjects"];
-		if (objectsValue.IsArray())
+		if (value.HasMember("Prototypes"))
 		{
-			ReadGameObjects(objectsValue);
+			const rapidjson::Value& objectsValue = value["Prototypes"];
+			if (objectsValue.IsArray())
+			{
+				ReadPrototypes(objectsValue);
+			}
+		}
+
+		if (value.HasMember("GameObjects"))
+		{
+			const rapidjson::Value& objectsValue = value["GameObjects"];
+			if (objectsValue.IsArray())
+			{
+				ReadGameObjects(objectsValue);
+			}
 		}
 
 	}
@@ -48,6 +59,21 @@ namespace bleh
 		for (auto gameObject : m_gameObjects)
 		{
 			gameObject->Update();
+		}
+
+		auto iter = m_gameObjects.begin();
+		while (iter != m_gameObjects.end())
+		{
+			if ((*iter)->m_flags[GameObject::eFlags::DESTROY])
+			{
+				(*iter)->Destroy();
+				delete (*iter);
+				iter = m_gameObjects.erase(iter);
+			}
+			else
+			{
+				iter++;
+			}
 		}
 	}
 
@@ -70,6 +96,21 @@ namespace bleh
 		}
 
 		return nullptr;
+	}
+
+	std::vector<GameObject*> Scene::FindGameObjectsWithTag(const std::string& tag)
+	{
+		std::vector<GameObject*> gameObjects;
+
+		for (auto gameObject : m_gameObjects)
+		{
+			if (gameObject->m_tag == tag)
+			{
+				gameObjects.push_back(gameObject);
+			}
+		}
+
+		return gameObjects;
 	}
 
 	void Scene::AddGameObject(GameObject* gameObject)
@@ -113,6 +154,27 @@ namespace bleh
 						gameObject->Create(m_engine);
 						gameObject->Read(objectValue);
 						Scene::AddGameObject(gameObject);
+					}
+			}
+		}
+	}
+	
+	void Scene::ReadPrototypes(const rapidjson::Value& value)
+	{
+		for (rapidjson::SizeType i = 0; i < value.Size(); i++)
+		{
+			const rapidjson::Value& objectValue = value[i];
+			if (objectValue.IsObject())
+			{
+				std::string typeName;
+				json::Get(objectValue, "type", typeName);
+				bleh::GameObject* gameObject = ObjectFactory::Instance().Create<GameObject>(typeName);
+					if (gameObject)
+					{
+						gameObject->Create(m_engine);
+						gameObject->Read(objectValue);
+
+						ObjectFactory::Instance().Register(gameObject->m_name, new Prototype<Object>(gameObject));
 					}
 			}
 		}
