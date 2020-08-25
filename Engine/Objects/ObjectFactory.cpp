@@ -3,6 +3,7 @@
 #include "Components/SpriteComponent.h"
 #include "ObjectFactory.h"
 #include <Components\SpriteAnimationComponent.h>
+#include <Components/RigidBodyComponent.h>
 
 namespace bleh
 {
@@ -12,6 +13,7 @@ namespace bleh
 		bleh::ObjectFactory::Instance().Register("PhysicsComponent", new Creator<PhysicsComponent, Object>);
 		bleh::ObjectFactory::Instance().Register("SpriteComponent", new Creator<SpriteComponent, Object>);
 		bleh::ObjectFactory::Instance().Register("SpriteAnimationComponent", new Creator<SpriteAnimationComponent, Object>);
+		bleh::ObjectFactory::Instance().Register("RigidBodyComponent", new Creator<RigidBodyComponent, Object>);
 
 	}
 }

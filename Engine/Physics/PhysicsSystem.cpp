@@ -3,7 +3,7 @@
 
 bool bleh::PhysicsSystem::Startup()
 {
-    b2Vec2 gravity{0.0f, -10.0f};
+    b2Vec2 gravity{0.0f, 150.0f};
     m_world = new b2World{ gravity };
 
     return true;
@@ -36,4 +36,27 @@ b2Body* bleh::PhysicsSystem::CreateBody(const Vector2& position, const Vector2& 
 
     return body;
 
+}
+
+b2Body* bleh::PhysicsSystem::CreateBody(const Vector2& position, RigidBodyData data, GameObject* gameObject)
+{
+    b2BodyDef bodyDef;
+
+    bodyDef.type = (data.isDynamic) ? b2_dynamicBody : b2_staticBody;
+    bodyDef.position.Set(position.x, position.y);
+    bodyDef.fixedRotation = data.lockAngle;
+    b2Body* body = m_world->CreateBody(&bodyDef);
+
+    b2PolygonShape shape;
+    shape.SetAsBox(data.size.x, data.size.y);
+
+    b2FixtureDef fixtureDef;
+    fixtureDef.density = data.density;
+    fixtureDef.friction = data.friction;
+    fixtureDef.restitution = data.restitution;
+    fixtureDef.shape = &shape;
+
+    body->CreateFixture(&fixtureDef);
+
+    return body;
 }
