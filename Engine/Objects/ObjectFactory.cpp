@@ -4,6 +4,7 @@
 #include "ObjectFactory.h"
 #include <Components\SpriteAnimationComponent.h>
 #include <Components/RigidBodyComponent.h>
+#include <Components\AudioComponent.h>
 
 namespace bleh
 {
@@ -14,6 +15,7 @@ namespace bleh
 		bleh::ObjectFactory::Instance().Register("SpriteComponent", new Creator<SpriteComponent, Object>);
 		bleh::ObjectFactory::Instance().Register("SpriteAnimationComponent", new Creator<SpriteAnimationComponent, Object>);
 		bleh::ObjectFactory::Instance().Register("RigidBodyComponent", new Creator<RigidBodyComponent, Object>);
+		bleh::ObjectFactory::Instance().Register("AudioComponent", new Creator<AudioComponent, Object>);
 
 	}
 }

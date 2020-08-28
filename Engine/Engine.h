@@ -5,6 +5,7 @@
 #include "Physics/PhysicsSystem.h"
 #include <Resources/ResourceManager.h>
 #include <Input\InputSystem.h>
+#include <Audio/AudioSystem.h>
 
 namespace bleh
 {

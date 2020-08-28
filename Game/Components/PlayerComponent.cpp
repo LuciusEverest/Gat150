@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "PlayerComponent.h"
 #include "Components/PhysicsComponent.h"
+#include <Components\AudioComponent.h>
 
 namespace bleh
 {
@@ -16,25 +17,40 @@ namespace bleh
 
 	void PlayerComponent::Update()
 	{
+		auto contacts = m_owner->GetContactsWithTag("Floor");
+		bool onGround = !contacts.empty();
+
 		bleh::Vector2 force{ 0, 0 };
 
 		if (m_owner->m_engine->GetSystem<bleh::InputSystem>()->GetButtonState(SDL_SCANCODE_A) == bleh::InputSystem::eButtonState::HELD)
 		{
-			force.x = -20000;
+			force.x = -200;
 		}
 		if (m_owner->m_engine->GetSystem<bleh::InputSystem>()->GetButtonState(SDL_SCANCODE_D) == bleh::InputSystem::eButtonState::HELD)
 		{
-			force.x = 20000;
+			force.x = 200;
 		}	
-		if (m_owner->m_engine->GetSystem<bleh::InputSystem>()->GetButtonState(SDL_SCANCODE_W) == bleh::InputSystem::eButtonState::PRESSED)
+		if (m_owner->m_engine->GetSystem<bleh::InputSystem>()->GetButtonState(SDL_SCANCODE_SPACE) == bleh::InputSystem::eButtonState::PRESSED)
 		{
-			force.y = -400000;
+			force.y = -1500;
+			AudioComponent* audioComponent = m_owner->GetComponent<AudioComponent>();
+			if (audioComponent)
+			{
+				audioComponent->Play();
+			}
 		}
+
 
 		PhysicsComponent* component = m_owner->GetComponent<PhysicsComponent>();
 		if (component)
 		{
 			component->SetForce(force);
+		}
+		
+		auto coinContacts = m_owner->GetContactsWithTag("Coin");
+		for (auto contact : coinContacts)
+		{
+			contact->m_flags[GameObject::eFlags::DESTROY] = true;
 		}
 	}
 }

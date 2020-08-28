@@ -6,6 +6,7 @@
 #include "Core/Factory.h"
 #include <Objects\ObjectFactory.h>
 #include <Objects\Scene.h>
+#include "TileMap.h"
 
 bleh::Engine engine;
 bleh::Scene scene;
@@ -23,14 +24,19 @@ int main(int, char**)
 	bleh::json::Load("scene.txt", document);
 	scene.Read(document);
 
-	/*for (size_t i = 0; i < 10; i++)
-	{
-		bleh::GameObject* gameObject = bleh::ObjectFactory::Instance().Create<bleh::GameObject>("ProtoExplosion");
-		gameObject->m_transform.position = { bleh::random(0, 800), bleh::random(0, 600) };
-		gameObject->m_transform.angle = bleh::random(0, 360);
+	bleh::json::Load("tileMap.txt", document);
+	bleh::TileMap tileMap;
+	tileMap.Read(document);
+	tileMap.Create(&scene);
 
-		scene.AddGameObject(gameObject);
-	}*/
+	//for (size_t i = 0; i < 10; i++)
+	//{
+	//	bleh::GameObject* gameObject = bleh::ObjectFactory::Instance().Create<bleh::GameObject>("ProtoCoin");
+	//	gameObject->m_transform.position = { bleh::random(0, 800), bleh::random(300, 500) };
+	//	//gameObject->m_transform.angle = bleh::random(0, 360);
+
+	//	scene.AddGameObject(gameObject);
+	//}
 
 	SDL_Event event;
 	bool quit = false;
@@ -60,9 +66,9 @@ int main(int, char**)
 
 		engine.GetSystem<bleh::Renderer>()->EndFrame();
 	}
-	engine.Shutdown();
-
 	scene.Destroy();
+
+	engine.Shutdown();
 
 	return 0;
 }
