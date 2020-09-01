@@ -3,6 +3,8 @@
 #include <Math\Transform.h>
 #include <Engine.h>
 #include <bitset>
+#include <Objects\Scene.h>
+#include <list>
 
 namespace bleh
 {
@@ -50,7 +52,9 @@ namespace bleh
 		float m_lifetime{ 0 };
 
 		Transform m_transform;
+
 		Engine* m_engine{ nullptr };
+		Scene* m_scene{ nullptr };
 
 	protected:
 		std::vector<Component*> m_components;

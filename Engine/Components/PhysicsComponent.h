@@ -13,7 +13,7 @@ namespace bleh
 
 		virtual void Update() override;
 
-		virtual void SetForce(const Vector2& force) { m_force = force; }
+		virtual void ApplyForce(const Vector2& force) { m_force = force; }
 		virtual Vector2 GetVelocity() {	return m_velocity;	}
 
 	protected:

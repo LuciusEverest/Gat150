@@ -2,6 +2,9 @@
 #include "document.h"
 #include <string>
 #include <vector>
+#include "Math/Color.h"
+#include "Math/Vector2.h"
+#include "SDL.h"
 
 namespace bleh
 {

@@ -12,8 +12,8 @@ namespace bleh
 		bool Create(const std::string& name, void* renderer) override;
 		void Destroy() override;
 
-		void Draw(const Vector2& postition, float angle = 0, const Vector2& scale = Vector2::one, const Vector2& orgin = Vector2::zero);
-		void Draw(const SDL_Rect& source, const Vector2& postition, float angle = 0, const Vector2& scale = Vector2::one, const Vector2& orgin = Vector2::zero);
+		void Draw(const Vector2& postition, float angle = 0, const Vector2& scale = Vector2::one, const Vector2& orgin = Vector2::zero, bool flip = false);
+		void Draw(const SDL_Rect& source, const Vector2& postition, float angle = 0, const Vector2& scale = Vector2::one, const Vector2& orgin = Vector2::zero, bool flip = false);
 
 		Vector2 GetSize() const;
 

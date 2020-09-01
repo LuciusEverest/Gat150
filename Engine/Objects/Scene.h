@@ -28,9 +28,10 @@ namespace bleh
 		void RemoveGameObject(GameObject* gameObject);
 		void RemoveAllGameObjects();
 
+	public:
+		Engine* m_engine{ nullptr };
 
 	protected:
-		Engine* m_engine{ nullptr };
 		std::list<GameObject*> m_gameObjects;
 	};
 

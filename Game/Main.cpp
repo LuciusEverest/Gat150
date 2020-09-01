@@ -2,8 +2,10 @@
 #include "pch.h"
 #include <Objects\GameObject.h>
 #include "Components/PlayerComponent.h"
+#include "Components/EnemyComponent.h"
 #include "Core/Json.h"
 #include "Core/Factory.h"
+#include "Core/EventManager.h"
 #include <Objects\ObjectFactory.h>
 #include <Objects\Scene.h>
 #include "TileMap.h"
@@ -11,13 +13,24 @@
 bleh::Engine engine;
 bleh::Scene scene;
 
+void OnPlayerDead(const bleh::Event& event)
+{
+	int* pdata = static_cast<int*>(event.data);
+	int score = *pdata;
+
+	std::cout << "Player Dead\n" << score << std::endl;
+}
+
 int main(int, char**)
 {
 	engine.Startup();
 		
 	bleh::ObjectFactory::Instance().Initialize();
 	bleh::ObjectFactory::Instance().Register("PlayerComponent", new bleh::Creator<bleh::PlayerComponent, bleh::Object>);
-	
+	bleh::ObjectFactory::Instance().Register("EnemyComponent", new bleh::Creator<bleh::EnemyComponent, bleh::Object>);
+
+	bleh::EventManager::Instance().Subscribe("PlayerDead", &OnPlayerDead);
+
 	scene.Create(&engine);
 
 	rapidjson::Document document;

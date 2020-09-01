@@ -30,7 +30,7 @@ void bleh::Texture::Destroy()
 	SDL_DestroyTexture(m_texture);
 }
 
-void bleh::Texture::Draw(const Vector2& position, float angle, const Vector2& scale, const Vector2& origin)
+void bleh::Texture::Draw(const Vector2& position, float angle, const Vector2& scale, const Vector2& origin, bool flip)
 {
 	Vector2 size = GetSize();
 	size = size * scale;
@@ -43,10 +43,10 @@ void bleh::Texture::Draw(const Vector2& position, float angle, const Vector2& sc
 	rect.w = static_cast<int>(size.x);
 	rect.h = static_cast<int>(size.y);
 
-	SDL_RenderCopyEx(m_renderer, m_texture, nullptr, &rect, angle, nullptr, SDL_FLIP_NONE);
+	SDL_RenderCopyEx(m_renderer, m_texture, nullptr, &rect, angle, nullptr, (flip) ? SDL_FLIP_HORIZONTAL : SDL_FLIP_NONE);
 }
 
-void bleh::Texture::Draw(const SDL_Rect& source, const Vector2& position, float angle, const Vector2& scale, const Vector2& origin)
+void bleh::Texture::Draw(const SDL_Rect& source, const Vector2& position, float angle, const Vector2& scale, const Vector2& origin, bool flip)
 {
 	Vector2 size = { source.w, source.h };
 	size = size * scale;
@@ -59,7 +59,7 @@ void bleh::Texture::Draw(const SDL_Rect& source, const Vector2& position, float 
 	rect.w = static_cast<int>(size.x);
 	rect.h = static_cast<int>(size.y);
 
-	SDL_RenderCopyEx(m_renderer, m_texture, &source, &rect, angle, nullptr, SDL_FLIP_NONE);
+	SDL_RenderCopyEx(m_renderer, m_texture, &source, &rect, angle, nullptr, (flip) ? SDL_FLIP_HORIZONTAL : SDL_FLIP_NONE);
 }
 
 bleh::Vector2 bleh::Texture::GetSize() const
